@@ -27,9 +27,9 @@ currencyLayer.convertCurrency(100.00, Currency.USD, Currency.EUR)
 ```
 
 If you wish to run the tests, please paste your access_key in the access_key.properties file:
-```Java`
+```Java
 accessKey=#YOUR_ACCESS_KEY
-``
+```
 
 The list of supported currencies at the moment limited to service provided by currecyLayer API which includes the following **168 currencies**:  
 
