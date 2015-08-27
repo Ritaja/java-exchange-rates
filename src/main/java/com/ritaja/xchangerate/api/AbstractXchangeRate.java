@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -20,26 +18,15 @@ import com.ritaja.xchangerate.util.Currency;
  * Created by rsengupta on 22/08/15.
  */
 public abstract class AbstractXchangeRate implements CurrencyConverter {
-	private static final String PROPERTIES_FILENAME = "currencyconverter.properties";
 	private static final String RATES_FILEPATH = "./src/main/resources/xchangeRates.json";
 
 	// default refresh rate of 1 day
 	protected static int REFRESHRATE_SECONDS = 86400;
 
-	private Properties properties;
 	private Currency baseCurr;
 	private JSONObject ratesDocument = null;
 
-	public AbstractXchangeRate(Currency baseCurrency)
-			throws XchangeRateException {
-		InputStream inputStream = AbstractXchangeRate.class.getClassLoader().getResourceAsStream(PROPERTIES_FILENAME);
-		this.properties = new Properties();
-		try {
-			this.properties.load(inputStream);
-			inputStream.close();
-		} catch (IOException e) {
-			throw new XchangeRateException(e);
-		}
+	public AbstractXchangeRate(Currency baseCurrency) {
 		this.baseCurr = baseCurrency;
 	}
 
@@ -136,10 +123,6 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 		}
 
 		return true;
-	}
-
-	protected Properties getProperties() {
-		return this.properties;
 	}
 
 	protected Currency getBaseCurrency() {
