@@ -6,14 +6,14 @@
 	<!-- ====================================================================== -->
 	<groupId>com.ritaja.exchangerates</groupId>
 	<artifactId>xchange-rate-api</artifactId>
-	<version>1.1</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<!-- ====================================================================== -->
 	<!-- Release config                                                   -->
 	<!-- ====================================================================== -->
-	<scm>
-		<developerConnection>scm:git:https://github.com/Ritaja/xchange-rate-api/
+	<!--<scm>
+		<developerConnection>scm:https://github.com/Ritaja/xchange-rate-api/
 		</developerConnection>
 	  <tag>xchange-rate-api-1.1</tag>
   </scm>
@@ -28,7 +28,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>
+	</build>-->
 	<!-- ====================================================================== -->
 	<!-- Dependencies                                                           -->
 	<!-- ====================================================================== -->
