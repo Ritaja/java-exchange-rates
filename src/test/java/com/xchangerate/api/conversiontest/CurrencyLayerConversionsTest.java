@@ -38,7 +38,7 @@ public class CurrencyLayerConversionsTest {
 		Assert.assertNotNull(currencyConverter, "Expected properly configured external helper library");
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void convertFromUSDTest() throws XchangeRateException, CurrencyConverterException, CurrencyNotSupportedException {
 		cLayer.setRefreshrateSeconds(86400);
 		double refConversion = (double) currencyConverter.convertCurrency(100f, com.tunyk.currencyconverter.api.Currency.USD, com.tunyk.currencyconverter.api.Currency.EUR);
@@ -46,7 +46,7 @@ public class CurrencyLayerConversionsTest {
 		Assert.assertTrue(abs(refConversion - actualCoversion) < 5.00, "Expected conversion accuracy of 5.00 units");
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void convertToUSDTest() throws XchangeRateException, CurrencyConverterException, CurrencyNotSupportedException {
 		cLayer.setRefreshrateSeconds(86400);
 		double refConversion = (double) currencyConverter.convertCurrency(100f, com.tunyk.currencyconverter.api.Currency.EUR, com.tunyk.currencyconverter.api.Currency.USD);
@@ -54,7 +54,7 @@ public class CurrencyLayerConversionsTest {
 		Assert.assertTrue(abs(refConversion - actualCoversion) < 5.00, "Expected conversion accuracy of 5.00 units");
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void convertCurrencyTest() throws XchangeRateException, CurrencyConverterException, CurrencyNotSupportedException {
 		cLayer.setRefreshrateSeconds(86400);
 		double refConversion = (double) currencyConverter.convertCurrency(100f, com.tunyk.currencyconverter.api.Currency.CAD, com.tunyk.currencyconverter.api.Currency.EUR);
@@ -62,7 +62,7 @@ public class CurrencyLayerConversionsTest {
 		Assert.assertTrue(abs(refConversion - actualCoversion) < 5.00, "Expected conversion accuracy of 5.00 units");
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void convertToSameCurrencyTest() throws XchangeRateException, CurrencyConverterException, CurrencyNotSupportedException {
 		cLayer.setRefreshrateSeconds(86400);
 		double refConversion = (double) currencyConverter.convertCurrency(100f, com.tunyk.currencyconverter.api.Currency.EUR, com.tunyk.currencyconverter.api.Currency.EUR);
