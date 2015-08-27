@@ -13,7 +13,7 @@
 	<!-- Release config                                                   -->
 	<!-- ====================================================================== -->
 	<scm>
-		<developerConnection>scm:git:git://github.com/Ritaja/xchange-rate-api/
+		<developerConnection>scm:git:https://github.com/Ritaja/xchange-rate-api/
 		</developerConnection>
 	  <tag>xchange-rate-api-1.1</tag>
   </scm>
