@@ -22,7 +22,7 @@ currencyLayer.setRefreshrateSeconds(86400);
 // convert between currencies
 // general format of conversion is convertCurrency(amount, fromCurrency, toCurrency)
 // example conversion of 100 USD to EUR is:
-currencyLayer.convertCurrency(100.00, Currency.USD, Currency.EUR)
+currencyLayer.convertCurrency(new BigDecimal(100.00), Currency.USD, Currency.EUR)
 // Thats how easy it is......
 ```
 

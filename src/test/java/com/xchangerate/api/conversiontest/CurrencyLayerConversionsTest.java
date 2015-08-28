@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Properties;
 
 import org.testng.Assert;
@@ -38,35 +39,35 @@ public class CurrencyLayerConversionsTest {
 		Assert.assertNotNull(currencyConverter, "Expected properly configured external helper library");
 	}
 
-	@Test(enabled = false)
+	@Test(enabled = true)
 	public void convertFromUSDTest() throws XchangeRateException, CurrencyConverterException, CurrencyNotSupportedException {
 		cLayer.setRefreshrateSeconds(86400);
 		double refConversion = (double) currencyConverter.convertCurrency(100f, com.tunyk.currencyconverter.api.Currency.USD, com.tunyk.currencyconverter.api.Currency.EUR);
-		double actualCoversion = cLayer.convertCurrency(100.00, Currency.USD, Currency.EUR);
-		Assert.assertTrue(abs(refConversion - actualCoversion) < 5.00, "Expected conversion accuracy of 5.00 units");
+		double actualCoversion = cLayer.convertCurrency(new BigDecimal(100.00), Currency.USD, Currency.EUR).doubleValue();
+		Assert.assertTrue(abs(refConversion - actualCoversion) < 1.00, "Expected conversion accuracy of 5.00 units");
 	}
 
-	@Test(enabled = false)
+	@Test(enabled = true)
 	public void convertToUSDTest() throws XchangeRateException, CurrencyConverterException, CurrencyNotSupportedException {
 		cLayer.setRefreshrateSeconds(86400);
 		double refConversion = (double) currencyConverter.convertCurrency(100f, com.tunyk.currencyconverter.api.Currency.EUR, com.tunyk.currencyconverter.api.Currency.USD);
-		double actualCoversion = cLayer.convertCurrency(100.00, Currency.EUR, Currency.USD);
-		Assert.assertTrue(abs(refConversion - actualCoversion) < 5.00, "Expected conversion accuracy of 5.00 units");
+		double actualCoversion = cLayer.convertCurrency(new BigDecimal(100.00), Currency.EUR, Currency.USD).doubleValue();
+		Assert.assertTrue(abs(refConversion - actualCoversion) < 1.00, "Expected conversion accuracy of 5.00 units");
 	}
 
-	@Test(enabled = false)
+	@Test(enabled = true)
 	public void convertCurrencyTest() throws XchangeRateException, CurrencyConverterException, CurrencyNotSupportedException {
 		cLayer.setRefreshrateSeconds(86400);
 		double refConversion = (double) currencyConverter.convertCurrency(100f, com.tunyk.currencyconverter.api.Currency.CAD, com.tunyk.currencyconverter.api.Currency.EUR);
-		double actualCoversion = cLayer.convertCurrency(100.00, Currency.CAD, Currency.EUR);
-		Assert.assertTrue(abs(refConversion - actualCoversion) < 5.00, "Expected conversion accuracy of 5.00 units");
+		double actualCoversion = cLayer.convertCurrency(new BigDecimal(100.00), Currency.CAD, Currency.EUR).doubleValue();
+		Assert.assertTrue(abs(refConversion - actualCoversion) < 1.00, "Expected conversion accuracy of 5.00 units");
 	}
 
-	@Test(enabled = false)
+	@Test(enabled = true)
 	public void convertToSameCurrencyTest() throws XchangeRateException, CurrencyConverterException, CurrencyNotSupportedException {
 		cLayer.setRefreshrateSeconds(86400);
 		double refConversion = (double) currencyConverter.convertCurrency(100f, com.tunyk.currencyconverter.api.Currency.EUR, com.tunyk.currencyconverter.api.Currency.EUR);
-		double actualCoversion = cLayer.convertCurrency(100.00, Currency.EUR, Currency.EUR);
-		Assert.assertTrue(abs(refConversion - actualCoversion) < 5.00, "Expected conversion accuracy of 5.00 units");
+		double actualCoversion = cLayer.convertCurrency(new BigDecimal(100.00), Currency.EUR, Currency.EUR).doubleValue();
+		Assert.assertTrue(abs(refConversion - actualCoversion) < 1.00, "Expected conversion accuracy of 5.00 units");
 	}
 }

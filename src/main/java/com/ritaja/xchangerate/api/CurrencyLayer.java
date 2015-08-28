@@ -1,5 +1,8 @@
 package com.ritaja.xchangerate.api;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -129,7 +132,7 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	 * @throws XchangeRateException
 	 * @returnouble converted amount
 	 */
-	public Double convertCurrency(double moneyAmount, Currency fromCurrency, Currency toCurrency) throws CurrencyNotSupportedException, XchangeRateException {
+	public BigDecimal convertCurrency(BigDecimal moneyAmount, Currency fromCurrency, Currency toCurrency) throws CurrencyNotSupportedException, XchangeRateException {
 		checkStaleData();
 		try {
 			// Scenario 1: {covert USD --> other currency}
@@ -140,7 +143,7 @@ public class CurrencyLayer extends AbstractXchangeRate {
 			} else if (toCurrency.equals(Currency.USD)) {
 				return convertToUSD(moneyAmount, fromCurrency);
 			} else {
-				double intermediateAmount = convertToUSD(moneyAmount, fromCurrency);
+				BigDecimal intermediateAmount = convertToUSD(moneyAmount, fromCurrency);
 				return convertFromUSD(intermediateAmount, toCurrency);
 			}
 		} catch (JSONException e) {
@@ -161,8 +164,8 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	 * @return double converted amount
 	 * @throws JSONException
 	 */
-	private double convertToUSD(double moneyAmount, Currency fromCurrency) throws JSONException, XchangeRateException {
-		return (moneyAmount / exchangeRates.getJSONObject("quotes").getDouble("USD" + fromCurrency));
+	private BigDecimal convertToUSD(BigDecimal moneyAmount, Currency fromCurrency) throws JSONException, XchangeRateException {
+		return (moneyAmount.divide(new BigDecimal(exchangeRates.getJSONObject("quotes").getDouble("USD" + fromCurrency)), 2, RoundingMode.HALF_UP));
 	}
 
 	/**
@@ -174,7 +177,8 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	 * @return double converted amount
 	 * @throws JSONException
 	 */
-	private double convertFromUSD(double moneyAmount, Currency toCurrency) throws JSONException, XchangeRateException {
-		return (exchangeRates.getJSONObject("quotes").getDouble("USD" + toCurrency) * moneyAmount);
+	private BigDecimal convertFromUSD(BigDecimal moneyAmount, Currency toCurrency) throws JSONException, XchangeRateException {
+		int digitsBeforeDecimal = moneyAmount.toPlainString().split("\\.")[0].length();
+		return (new BigDecimal(exchangeRates.getJSONObject("quotes").getDouble("USD" + toCurrency)).multiply(moneyAmount, new MathContext(digitsBeforeDecimal + 2, RoundingMode.HALF_UP)));
 	}
 }
