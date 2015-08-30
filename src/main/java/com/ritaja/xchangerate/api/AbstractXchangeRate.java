@@ -18,8 +18,8 @@ import com.ritaja.xchangerate.util.Currency;
  * Created by rsengupta on 22/08/15.
  */
 public abstract class AbstractXchangeRate implements CurrencyConverter {
-	private static final String RATES_FILEPATH = "./src/main/resources/xchangeRates.json";
-
+	protected static String RATES_FILEPATH = System.getProperty("java.io.tmpdir");
+	private static final String RATES_FILENAME = "/xchangeRates.json";
 	// default refresh rate of 1 day
 	protected static int REFRESHRATE_SECONDS = 86400;
 
@@ -38,7 +38,7 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 	 */
 	protected void saveRates(JSONObject exchangeRates) throws XchangeRateException {
 		try {
-			FileWriter file = new FileWriter(RATES_FILEPATH);
+			FileWriter file = new FileWriter(RATES_FILEPATH + RATES_FILENAME);
 			file.write(exchangeRates.toString());
 			file.flush();
 			file.close();
@@ -59,7 +59,7 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 		BufferedReader br = null;
 		try {
 			String line;
-			br = new BufferedReader(new FileReader(RATES_FILEPATH));
+			br = new BufferedReader(new FileReader(RATES_FILEPATH + RATES_FILENAME));
 			while ((line = br.readLine()) != null) {
 				jsonData += line + "\n";
 			}

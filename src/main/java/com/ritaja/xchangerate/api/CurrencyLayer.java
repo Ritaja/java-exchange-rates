@@ -107,6 +107,15 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	}
 
 	/**
+	 * sets the filepath for the exchange rates containing file
+	 *
+	 * @param filePath a valid file path to hold the cached exchange rates
+	 */
+	public static void setRatesFilePath(String filePath) {
+		RATES_FILEPATH = filePath;
+	}
+
+	/**
 	 * returns the date when the exchange rate date was last cached/stored
 	 *
 	 * @return String date
