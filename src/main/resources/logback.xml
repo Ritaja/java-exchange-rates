@@ -18,7 +18,7 @@
 	<logger name="com.ritaja.xchangerate.api" level="TRACE"/>
 
 	<!-- TRACE, DEBUG, INFO, WARN, ERROR, ALL or OFF -->
-	<root level="WARN">
+	<root level="ALL">
 		<appender-ref ref="STDOUT"/>
 		<appender-ref ref="FILE"/>
 	</root>

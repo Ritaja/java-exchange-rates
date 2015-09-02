@@ -3,7 +3,8 @@
 <suite name="Conversion Tests" verbose="5" parallel="false" thread-count="1">
 	<test name="CurrencyConversion Tests" parallel="false" thread-count="1">
 		<classes>
-			<class name="com.xchangerate.api.conversiontest.CurrencyLayerConversionsTest"/>
+			<!--<class name="com.xchangerate.api.conversiontest.CurrencyLayerConversionsTest"/>-->
+			<class name="com.xchangerate.api.conversiontest.YahooCurrencyEndpointTest"/>
 		</classes>
 	</test>
 </suite>

@@ -6,6 +6,8 @@ import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -13,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -20,20 +23,21 @@ import org.slf4j.LoggerFactory;
 
 import com.ritaja.xchangerate.util.Currency;
 
-public class CurrencyLayer extends AbstractXchangeRate {
-
-	public String BASE_URL = "http://apilayer.net/api/";
-	public String ENDPOINT = "live";
-	public String accessKey;
-	private final Logger LOGGER = LoggerFactory.getLogger(CurrencyLayer.class);
+/**
+ * Created by rsengupta on 30/08/15.
+ */
+public class YahooCurrencyEndpoint extends AbstractXchangeRate {
+	public String BASE_URL = "http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/";
+	public String ENDPOINT = "quote";
+	private Map rate = new HashMap();
+	private Currency fromCurrency;
+	private Currency toCurrency;
+	private final Logger LOGGER = LoggerFactory.getLogger(YahooCurrencyEndpoint.class);
 	// used for executing requests to the (REST) API
 	private CloseableHttpClient httpClient;
 
-	public CurrencyLayer(String accessKey) throws XchangeRateException {
-		super(Currency.USD, "currencyLayer");
-
-		this.accessKey = accessKey;
-		checkStaleData();
+	public YahooCurrencyEndpoint() throws XchangeRateException {
+		super(Currency.USD, "yahoo");
 	}
 
 	/**
@@ -68,31 +72,18 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	 * @throws XchangeRateException
 	 */
 	private void sendLiveRequest() throws XchangeRateException {
-		HttpGet get = new HttpGet(BASE_URL + ENDPOINT + "?access_key=" + accessKey);
+		HttpGet get = new HttpGet(BASE_URL + ENDPOINT + "?format=json");
 
 		try {
 			httpClient = HttpClients.createDefault();
 			CloseableHttpResponse response = httpClient.execute(get);
 			HttpEntity entity = response.getEntity();
 			exchangeRates = new JSONObject(EntityUtils.toString(entity));
-			checkResponse();
 			saveRates();
 			httpClient.close();
-			// LOGGER.debug("Response from currency layer: " + exchangeRates.toString());
+			// LOGGER.debug("Response from  yahoo endpoint: " + exchangeRates.toString());
 		} catch (Exception e) {
 			throw new XchangeRateException(e);
-		}
-	}
-
-	/**
-	 * checks if the response from the web service API was a success
-	 *
-	 * @throws XchangeRateException
-	 * @throws JSONException
-	 */
-	private void checkResponse() throws XchangeRateException, JSONException {
-		if (exchangeRates.get("success").toString().equalsIgnoreCase("false")) {
-			throw new XchangeRateException("Currency Layer request did not succeed, info: " + exchangeRates.getJSONObject("error").get("info"));
 		}
 	}
 
@@ -115,7 +106,7 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	}
 
 	/**
-	 * returns the date when the exchange rate date was last cached/stored in a nice formatted string
+	 * returns the date when the exchange rate date was last cached/stored in a nice formated string
 	 *
 	 * @return String date
 	 * @throws XchangeRateException
@@ -140,9 +131,11 @@ public class CurrencyLayer extends AbstractXchangeRate {
 		if (fromCurrency.equals(Currency.USD) && toCurrency.equals(Currency.USD)) {
 			return new BigDecimal("1.00").multiply(moneyAmount);
 		}
+		this.fromCurrency = fromCurrency;
+		this.toCurrency = toCurrency;
 		checkStaleData();
 		try {
-			// Scenario 0: {convert USD --> other currency} (lame scenario)
+			// Scenario 0: {convert USD --> other currency} (lame scenario taken care before)
 			// Scenario 1: {convert USD --> other currency}
 			// Scenario 2: {other currency --> covert USD}
 			// Scenario 3: {covert between different currencies}
@@ -155,11 +148,7 @@ public class CurrencyLayer extends AbstractXchangeRate {
 				return convertFromUSD(intermediateAmount, toCurrency);
 			}
 		} catch (JSONException e) {
-			if (e.getMessage().contains("\"USD")) {
-				throw new CurrencyNotSupportedException("currency: " + e.getMessage().substring(15, 18) + " not supported");
-			} else {
-				throw new XchangeRateException(e);
-			}
+			throw new XchangeRateException(e);
 		}
 	}
 
@@ -172,8 +161,11 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	 * @return double converted amount
 	 * @throws JSONException
 	 */
-	private BigDecimal convertToUSD(BigDecimal moneyAmount, Currency fromCurrency) throws JSONException, XchangeRateException {
-		return (moneyAmount.divide(new BigDecimal(exchangeRates.getJSONObject("quotes").getDouble("USD" + fromCurrency)), 2, RoundingMode.HALF_UP));
+	private BigDecimal convertToUSD(BigDecimal moneyAmount, Currency fromCurrency) throws JSONException, XchangeRateException, CurrencyNotSupportedException {
+		if (rate.isEmpty()) {
+			return (moneyAmount.divide(new BigDecimal(getPrice(fromCurrency)), 2, RoundingMode.HALF_UP));
+		}
+		return (moneyAmount.divide(new BigDecimal(rate.get(fromCurrency).toString()), 2, RoundingMode.HALF_UP));
 	}
 
 	/**
@@ -185,9 +177,12 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	 * @return double converted amount
 	 * @throws JSONException
 	 */
-	private BigDecimal convertFromUSD(BigDecimal moneyAmount, Currency toCurrency) throws JSONException, XchangeRateException {
+	private BigDecimal convertFromUSD(BigDecimal moneyAmount, Currency toCurrency) throws JSONException, XchangeRateException, CurrencyNotSupportedException {
 		int digitsBeforeDecimal = moneyAmount.toPlainString().split("\\.")[0].length();
-		return (new BigDecimal(exchangeRates.getJSONObject("quotes").getDouble("USD" + toCurrency)).multiply(moneyAmount, new MathContext(digitsBeforeDecimal + 2, RoundingMode.HALF_UP)));
+		if (rate.isEmpty()) {
+			return (moneyAmount.divide(new BigDecimal(getPrice(toCurrency)), 2, RoundingMode.HALF_UP));
+		}
+		return (new BigDecimal(rate.get(toCurrency).toString()).multiply(moneyAmount, new MathContext(digitsBeforeDecimal + 2, RoundingMode.HALF_UP)));
 	}
 
 	/**
@@ -198,9 +193,66 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	 */
 	public long getTimestamp() throws XchangeRateException {
 		try {
-			return Long.parseLong(exchangeRates.get("timestamp").toString(), 10) * 1000;
+			if (fromCurrency.toString().equalsIgnoreCase(Currency.USD.toString())) {
+				return retrieveTimeForCurrency(toCurrency);
+			} else if (toCurrency.toString().equalsIgnoreCase(Currency.USD.toString())) {
+				return retrieveTimeForCurrency(fromCurrency);
+			}
+			// return the lowest timestamp
+			long fromCurrencyTimestamp = retrieveTimeForCurrency(fromCurrency);
+			long toCurrencyTimestamp = retrieveTimeForCurrency(toCurrency);
+			return fromCurrencyTimestamp < toCurrencyTimestamp ? fromCurrencyTimestamp : toCurrencyTimestamp;
+			// Java 7 does not allow combined catch statements
 		} catch (JSONException e) {
 			throw new XchangeRateException(e);
+		} catch (CurrencyNotSupportedException e) {
+			throw new XchangeRateException(e);
 		}
+	}
+
+	/**
+	 * retrieves the timestamp associated with a currency.
+	 * This method also stores the rates for the currencies
+	 * it retrieves timestamp for. This makes it fast for
+	 * currency lookup during conversion
+	 *
+	 * @param currency
+	 * @return long timestamp in milliseconds
+	 * @throws JSONException
+	 * @throws CurrencyNotSupportedException
+	 */
+	private long retrieveTimeForCurrency(Currency currency) throws JSONException, CurrencyNotSupportedException {
+		JSONArray resources = exchangeRates.getJSONObject("list").getJSONArray("resources");
+		// JSONArray is not iterable, hence the code
+		for (int i = 0; i < resources.length(); ++i) {
+			JSONObject field = resources.getJSONObject(i).getJSONObject("resource").getJSONObject("fields");
+			if (field.getString("name").equalsIgnoreCase("USD/" + currency.toString())) {
+				rate.put(currency, field.getString("price"));
+				return Long.parseLong(field.getString("ts"), 10) * 1000;
+			}
+		}
+		throw new CurrencyNotSupportedException("currency: " + currency + " is not supported by Yahoo endpoint");
+	}
+
+	/**
+	 * retrieves the "price" value from the JSON data for given currency
+	 * this helper is run only when we are creating the xchangeRates file for the first time.
+	 * once created we use the java map rate for efficiency
+	 *
+	 * @param currency
+	 * @return String "price" value
+	 * @throws JSONException
+	 * @throws CurrencyNotSupportedException
+	 */
+	private String getPrice(Currency currency) throws JSONException, CurrencyNotSupportedException {
+		JSONArray resources = exchangeRates.getJSONObject("list").getJSONArray("resources");
+		// JSONArray is not iterable, hence the code
+		for (int i = 0; i < resources.length(); ++i) {
+			JSONObject field = resources.getJSONObject(i).getJSONObject("resource").getJSONObject("fields");
+			if (field.getString("name").equalsIgnoreCase("USD/" + currency.toString())) {
+				return field.getString("price");
+			}
+		}
+		throw new CurrencyNotSupportedException("currency: " + currency + " is not supported by Yahoo endpoint");
 	}
 }

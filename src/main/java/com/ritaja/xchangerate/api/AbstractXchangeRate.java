@@ -7,10 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Seconds;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ritaja.xchangerate.util.Currency;
 
@@ -18,25 +18,29 @@ import com.ritaja.xchangerate.util.Currency;
  * Created by rsengupta on 22/08/15.
  */
 public abstract class AbstractXchangeRate implements CurrencyConverter {
-	protected static String RATES_FILEPATH = System.getProperty("java.io.tmpdir");
-	private static final String RATES_FILENAME = "/xchangeRates.json";
+	protected String RATES_FILEPATH = System.getProperty("java.io.tmpdir");
+	protected String RATES_FILENAME;
 	// default refresh rate of 1 day
-	protected static int REFRESHRATE_SECONDS = 86400;
-
+	protected int REFRESHRATE_SECONDS = 86400;
 	private Currency baseCurr;
-	private JSONObject ratesDocument = null;
+	protected JSONObject exchangeRates = null;
 
-	public AbstractXchangeRate(Currency baseCurrency) {
+	private final Logger LOGGER = LoggerFactory.getLogger(AbstractXchangeRate.class);
+
+	public AbstractXchangeRate(Currency baseCurrency, String filenameAppender) {
 		this.baseCurr = baseCurrency;
+		this.RATES_FILENAME = "/" + filenameAppender + "XchangeRates.json";
 	}
 
 	/**
 	 * saves the exchange rates in a stored resource file
 	 *
-	 * @param exchangeRates JSONObject of exchange rates from the reply
 	 * @throws XchangeRateException
 	 */
-	protected void saveRates(JSONObject exchangeRates) throws XchangeRateException {
+	protected void saveRates() throws XchangeRateException {
+		if (exchangeRates == null) {
+			throw new XchangeRateException("Cannot save null exchangeRates!");
+		}
 		try {
 			FileWriter file = new FileWriter(RATES_FILEPATH + RATES_FILENAME);
 			file.write(exchangeRates.toString());
@@ -75,14 +79,14 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 		}
 		// covert the parsed string to a JSON object
 		try {
-			ratesDocument = new JSONObject(jsonData);
+			exchangeRates = new JSONObject(jsonData);
 		} catch (JSONException e) {
 			throw new XchangeRateException(e);
 		}
 	}
 
 	protected JSONObject getRates() {
-		return this.ratesDocument;
+		return this.exchangeRates;
 	}
 
 	/**
@@ -91,7 +95,7 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 	 * @return boolean truth value
 	 */
 	private boolean resourceExists() {
-		File f = new File(RATES_FILEPATH);
+		File f = new File(RATES_FILEPATH + RATES_FILENAME);
 		if (f.exists() && !f.isDirectory()) {
 			return true;
 		}
@@ -106,26 +110,25 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 	 * @throws XchangeRateException
 	 */
 	protected boolean checkRatesUsable() throws XchangeRateException {
-		if (resourceExists() && ratesDocument == null) {
+		if (resourceExists() && exchangeRates == null) {
 			retrieveRates();
 		} else if (!resourceExists()) {
 			return false;
 		}
-		try {
-			DateTime timestamp = new DateTime(Long.parseLong(ratesDocument.get("timestamp").toString(), 10) * 1000);
-			DateTime now = new DateTime();
-			Days days = Days.daysBetween(timestamp, now);
-			if (days.toStandardSeconds().isLessThan(Seconds.seconds(REFRESHRATE_SECONDS))) {
-				return false;
-			}
-		} catch (JSONException e) {
-			throw new XchangeRateException(e);
+		// calculate the difference in timestamp and return false if not expired
+		long old = getTimestamp();
+		long now = new DateTime().getMillis();
+		if ((old - now) / 1000 < (REFRESHRATE_SECONDS)) {
+			LOGGER.debug("difference from days: " + (old - now) / 1000);
+			return false;
 		}
-
+		// return true if the timestamp has expired
 		return true;
 	}
 
 	protected Currency getBaseCurrency() {
 		return this.baseCurr;
 	}
+
+	public abstract long getTimestamp() throws XchangeRateException;
 }

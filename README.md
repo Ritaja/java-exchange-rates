@@ -4,14 +4,16 @@ Xchange Rate is a Java library which provides API for currency conversion. It us
 
 To allow **offline conversion**, this library stores conversion rates obtained from the web-service and uses the **stored exchange** rates for offline conversion. Each time the Library is run it checks if the conversion rates stored are outdated. If it finds outdated exchange rates it **updates the stored exchange rates** (using the web-service defined) and then completes the conversion task. To instuct the code when to consider exchange rates as outdated set the **refreshRate** parameter. An example code below explains this scenario.
 
-**web-services are supported:**
+**supported web-services:**
 
  1. currencyLayer API (A access token is required to use this service, a **free** token can be obtained from [here](https://currencylayer.com/signup?plan=1).) 
- 2. Plans to integrate more..
+ 2. Yahoo finance currency exchange rate service
 
 
 
 Example Use:
+
+**using the currency layer endpoint**
 ```Java
 // create the appropriate servive object
 CurrencyLayer currencyLayer = new CurrencyLayer(YOUR_ACCESS_KEY);
@@ -25,11 +27,27 @@ currencyLayer.setRefreshrateSeconds(86400);
 currencyLayer.convertCurrency(new BigDecimal(100.00), Currency.USD, Currency.EUR)
 // Thats how easy it is......
 ```
+**using the yahoo finance endpoint**
+```Java
+// create the appropriate servive object
+YahooCurrencyEndpoint yahooCurrencyEndpoint = new YahooCurrencyEndpoint();
 
-If you wish to run the tests, please paste your access_key in the access_key.properties file:
+// set the refresh rate  to set timer to update new exchange rates
+yahooCurrencyEndpoint.setRefreshrateSeconds(86400);
+
+// convert between currencies
+// general format of conversion is convertCurrency(amount, fromCurrency, toCurrency)
+// example conversion of 100 USD to EUR is:
+yahooCurrencyEndpoint.convertCurrency(new BigDecimal(100.00), Currency.USD, Currency.EUR)
+// Thats how easy it is......
+```
+Yahoo finance endpoint has different timestamps for each currency exchange rate. This library checks for the updated exchange rate for the desiered currencies efore the conversion task. This behaviour is controlled by the **refreshRate** parameter
+
+If you wish to run the tests for currency layer endpoint, please paste your access_key in the access_key.properties file:
 ```Java
 accessKey=#YOUR_ACCESS_KEY
 ```
+tests for the Yahoo endpoint is enabled and requires no access keys.
 
 The list of supported currencies at the moment limited to service provided by currecyLayer API which includes the following **168 currencies**:  
 
