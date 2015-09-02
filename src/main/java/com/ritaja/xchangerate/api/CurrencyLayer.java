@@ -102,7 +102,7 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	 * @param refreshrateSeconds
 	 */
 	public void setRefreshrateSeconds(int refreshrateSeconds) {
-		REFRESHRATE_SECONDS = refreshrateSeconds;
+		this.refreshRateSeconds = refreshrateSeconds;
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	 * @param filePath a valid file path to hold the cached exchange rates
 	 */
 	public void setRatesFilePath(String filePath) {
-		RATES_FILEPATH = filePath;
+		ratesFilepath = filePath;
 	}
 
 	/**

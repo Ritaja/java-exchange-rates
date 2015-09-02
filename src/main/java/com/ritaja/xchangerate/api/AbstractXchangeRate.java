@@ -9,8 +9,6 @@ import java.io.IOException;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ritaja.xchangerate.util.Currency;
 
@@ -18,18 +16,16 @@ import com.ritaja.xchangerate.util.Currency;
  * Created by rsengupta on 22/08/15.
  */
 public abstract class AbstractXchangeRate implements CurrencyConverter {
-	protected String RATES_FILEPATH = System.getProperty("java.io.tmpdir");
-	protected String RATES_FILENAME;
+	protected String ratesFilepath = System.getProperty("java.io.tmpdir");
+	protected String ratesFilename;
 	// default refresh rate of 1 day
-	protected int REFRESHRATE_SECONDS = 86400;
+	protected int refreshRateSeconds = 86400;
 	private Currency baseCurr;
 	protected JSONObject exchangeRates = null;
 
-	private final Logger LOGGER = LoggerFactory.getLogger(AbstractXchangeRate.class);
-
 	public AbstractXchangeRate(Currency baseCurrency, String filenameAppender) {
 		this.baseCurr = baseCurrency;
-		this.RATES_FILENAME = "/" + filenameAppender + "XchangeRates.json";
+		this.ratesFilename = "/" + filenameAppender + "XchangeRates.json";
 	}
 
 	/**
@@ -42,7 +38,7 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 			throw new XchangeRateException("Cannot save null exchangeRates!");
 		}
 		try {
-			FileWriter file = new FileWriter(RATES_FILEPATH + RATES_FILENAME);
+			FileWriter file = new FileWriter(ratesFilepath + ratesFilename);
 			file.write(exchangeRates.toString());
 			file.flush();
 			file.close();
@@ -63,7 +59,7 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 		BufferedReader br = null;
 		try {
 			String line;
-			br = new BufferedReader(new FileReader(RATES_FILEPATH + RATES_FILENAME));
+			br = new BufferedReader(new FileReader(ratesFilepath + ratesFilename));
 			while ((line = br.readLine()) != null) {
 				jsonData += line + "\n";
 			}
@@ -95,7 +91,7 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 	 * @return boolean truth value
 	 */
 	private boolean resourceExists() {
-		File f = new File(RATES_FILEPATH + RATES_FILENAME);
+		File f = new File(ratesFilepath + ratesFilename);
 		if (f.exists() && !f.isDirectory()) {
 			return true;
 		}
@@ -118,8 +114,7 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 		// calculate the difference in timestamp and return false if not expired
 		long old = getTimestamp();
 		long now = new DateTime().getMillis();
-		if ((old - now) / 1000 < (REFRESHRATE_SECONDS)) {
-			LOGGER.debug("difference from days: " + (old - now) / 1000);
+		if ((old - now) / 1000 < (refreshRateSeconds)) {
 			return false;
 		}
 		// return true if the timestamp has expired
