@@ -1,5 +1,8 @@
 package com.ritaja.xchangerate.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by rsengupta on 22/08/15.
  */
@@ -188,9 +191,7 @@ public enum Currency {
 
 	private final String symbol;
 
-	/**
-	 * @param symbol
-	 */
+
 	private Currency(final String symbol) {
 		this.symbol = symbol;
 	}
@@ -198,6 +199,23 @@ public enum Currency {
 	@Override
 	public String toString() {
 		return symbol;
+	}
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+	// Reverse-lookup map for getting a currency from a Symbol
+	private static final Map<String, Currency> lookup = new HashMap<String, Currency>();
+
+	static {
+		for (Currency c : Currency.values()) {
+			lookup.put(c.getSymbol(), c);
+		}
+	}
+
+	public static Currency get(String symbol) {
+		return lookup.get(symbol);
 	}
 	/**
 	 * Constants only.
