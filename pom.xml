@@ -11,34 +11,9 @@
 	<packaging>jar</packaging>
 
 	<!-- ====================================================================== -->
-	<!-- Release config                                                   -->
-	<!-- ====================================================================== -->
-	<!--<scm>
-		<developerConnection>scm:https://github.com/Ritaja/xchange-rate-api/
-		</developerConnection>
-	  <tag>xchange-rate-api-1.1</tag>
-  </scm>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.2</version>
-				<configuration>
-					<tagBase>https://github.com/Ritaja/xchange-rate-api/releases</tagBase>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>-->
-	<!-- ====================================================================== -->
 	<!-- Dependencies                                                           -->
 	<!-- ====================================================================== -->
 	<dependencies>
-		<dependency>
-			<groupId>com.github.Ritaja</groupId>
-			<artifactId>xchange-rate-api</artifactId>
-			<version>v1.0</version>
-		</dependency>
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>

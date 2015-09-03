@@ -15,8 +15,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ritaja.xchangerate.util.Currency;
 
@@ -25,7 +23,7 @@ public class CurrencyLayer extends AbstractXchangeRate {
 	public String BASE_URL = "http://apilayer.net/api/";
 	public String ENDPOINT = "live";
 	public String accessKey;
-	private final Logger LOGGER = LoggerFactory.getLogger(CurrencyLayer.class);
+	private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(CurrencyLayer.class.getName());
 	// used for executing requests to the (REST) API
 	private CloseableHttpClient httpClient;
 

@@ -25,7 +25,7 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 
 	public AbstractXchangeRate(Currency baseCurrency, String filenameAppender) {
 		this.baseCurr = baseCurrency;
-		this.ratesFilename = "/" + filenameAppender + "XchangeRates.json";
+		this.ratesFilename = System.getProperty("file.separator") + filenameAppender + "XchangeRates.json";
 	}
 
 	/**
@@ -123,11 +123,11 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 		// calculate the difference in timestamp and return false if not expired
 		long old = getTimestamp();
 		long now = new DateTime().getMillis();
-		if ((old - now) / 1000 < (refreshRateSeconds)) {
-			return false;
+		if (Math.abs((old - now) / 1000) < (refreshRateSeconds)) {
+			return true;
 		}
 		// return true if the timestamp has expired
-		return true;
+		return false;
 	}
 
 	protected Currency getBaseCurrency() {

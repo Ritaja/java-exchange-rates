@@ -18,8 +18,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ritaja.xchangerate.util.Currency;
 
@@ -32,11 +30,11 @@ public class YahooCurrencyEndpoint extends AbstractXchangeRate {
 	private Map rate = new HashMap();
 	private Currency fromCurrency;
 	private Currency toCurrency;
-	private final Logger LOGGER = LoggerFactory.getLogger(YahooCurrencyEndpoint.class);
+	private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(CurrencyLayer.class.getName());
 	// used for executing requests to the (REST) API
 	private CloseableHttpClient httpClient;
 
-	public YahooCurrencyEndpoint() throws XchangeRateException {
+	public YahooCurrencyEndpoint() {
 		super(Currency.USD, "yahoo");
 	}
 
@@ -79,12 +77,25 @@ public class YahooCurrencyEndpoint extends AbstractXchangeRate {
 			CloseableHttpResponse response = httpClient.execute(get);
 			HttpEntity entity = response.getEntity();
 			exchangeRates = new JSONObject(EntityUtils.toString(entity));
+			checkResponse();
 			saveRates();
 			httpClient.close();
 			// LOGGER.debug("Response from  yahoo endpoint: " + exchangeRates.toString());
+		} catch (JSONException e) {
+			sendLiveRequest();
 		} catch (Exception e) {
 			throw new XchangeRateException(e);
 		}
+	}
+
+	/**
+	 * checks if the response from the web service API was a success
+	 *
+	 * @throws XchangeRateException
+	 * @throws JSONException
+	 */
+	private void checkResponse() throws XchangeRateException, JSONException {
+		exchangeRates.getJSONObject("list").getJSONArray("resources").getJSONObject(1).getJSONObject("resource").getJSONObject("fields").getString("name");
 	}
 
 	/**
