@@ -88,15 +88,6 @@ public class YahooCurrencyEndpoint extends AbstractXchangeRate {
 	}
 
 	/**
-	 * set the refresh rate for checking when stored exchange rate is outdated
-	 *
-	 * @param refreshrateSeconds
-	 */
-	public void setRefreshrateSeconds(int refreshrateSeconds) {
-		this.refreshRateSeconds = refreshrateSeconds;
-	}
-
-	/**
 	 * sets the filepath for the exchange rates containing file
 	 *
 	 * @param filePath a valid file path to hold the cached exchange rates
@@ -128,8 +119,8 @@ public class YahooCurrencyEndpoint extends AbstractXchangeRate {
 	 * @returnouble converted amount
 	 */
 	public BigDecimal convertCurrency(BigDecimal moneyAmount, Currency fromCurrency, Currency toCurrency) throws CurrencyNotSupportedException, XchangeRateException {
-		if (fromCurrency.equals(Currency.USD) && toCurrency.equals(Currency.USD)) {
-			return new BigDecimal("1.00").multiply(moneyAmount);
+		if (fromCurrency.equals(toCurrency)) {
+			return moneyAmount;
 		}
 		this.fromCurrency = fromCurrency;
 		this.toCurrency = toCurrency;

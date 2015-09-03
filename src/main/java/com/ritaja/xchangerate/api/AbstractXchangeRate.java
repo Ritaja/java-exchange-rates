@@ -48,6 +48,15 @@ public abstract class AbstractXchangeRate implements CurrencyConverter {
 	}
 
 	/**
+	 * set the refresh rate for checking when stored exchange rate is outdated
+	 *
+	 * @param refreshrateSeconds
+	 */
+	public void setRefreshrateSeconds(int refreshrateSeconds) {
+		this.refreshRateSeconds = refreshrateSeconds;
+	}
+
+	/**
 	 * Parses the exchange rates from the stored resource file
 	 * and stores them as a JSONObject
 	 *
