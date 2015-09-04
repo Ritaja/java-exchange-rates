@@ -201,16 +201,13 @@ public enum Currency {
 		return symbol;
 	}
 
-	public String getSymbol() {
-		return symbol;
-	}
 
 	// Reverse-lookup map for getting a currency from a Symbol
 	private static final Map<String, Currency> lookup = new HashMap<String, Currency>();
 
 	static {
 		for (Currency c : Currency.values()) {
-			lookup.put(c.getSymbol(), c);
+			lookup.put(c.toString(), c);
 		}
 	}
 
