@@ -24,6 +24,7 @@ public abstract class ServiceFactory extends CachingXchangeRate {
 	public Currency baseCurrency;
 	// used for executing requests to the (REST) API
 	private HttpserviceImpl httpservice;
+	protected JSONObject response;
 
 	public ServiceFactory(DiskStore diskStore, Currency baseCurrency, String uri) {
 		super(diskStore);
@@ -41,7 +42,7 @@ public abstract class ServiceFactory extends CachingXchangeRate {
 	 * @throws XchangeRateException
 	 */
 	public JSONObject sendLiveRequest() throws JSONException, ServiceException, EndpointException {
-		JSONObject response=httpservice.getResponse(HttpMethods.GET);
+		response=httpservice.getResponse(HttpMethods.GET);
 		if(checkResponse()) {
 			return response;
 		}

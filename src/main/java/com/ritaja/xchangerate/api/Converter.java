@@ -11,5 +11,5 @@ import com.ritaja.xchangerate.util.Currency;
 
 public interface Converter {
 
-	public BigDecimal convertCurrency(BigDecimal moneyAmount, Currency fromCurrency, Currency toCurrency) throws XchangeRateException, CurrencyNotSupportedException, JSONException, StorageException, EndpointException, ServiceException;
+	public BigDecimal convertCurrency(BigDecimal moneyAmount, Currency fromCurrency, Currency toCurrency) throws CurrencyNotSupportedException, JSONException, StorageException, EndpointException, ServiceException;
 }

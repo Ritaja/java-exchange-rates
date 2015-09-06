@@ -33,7 +33,7 @@ public class YahooEndpoint extends ServiceFactory {
 	 * @throws JSONException
 	 */
 	public boolean checkResponse() throws EndpointException, JSONException {
-		exchangeRates.getJSONObject("list").getJSONArray("resources").getJSONObject(1).getJSONObject("resource").getJSONObject("fields").getString("name");
+		response.getJSONObject("list").getJSONArray("resources").getJSONObject(1).getJSONObject("resource").getJSONObject("fields").getString("name");
 
 		return true;
 	}
@@ -85,7 +85,7 @@ public class YahooEndpoint extends ServiceFactory {
 		for (int i = 0; i < resources.length(); ++i) {
 			JSONObject field = resources.getJSONObject(i).getJSONObject("resource").getJSONObject("fields");
 			if (field.getString("name").equalsIgnoreCase("USD/" + currency.toString())) {
-				rate.put(currency, field.getString("price"));
+				rate.put(currency, new BigDecimal(field.getString("price")));
 				return Long.parseLong(field.getString("ts"), 10) * 1000;
 			}
 		}

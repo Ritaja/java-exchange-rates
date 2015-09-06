@@ -13,7 +13,8 @@ import org.json.JSONObject;
  * Created by rsengupta on 03/09/15.
  */
 public class FileStore extends DiskStore {
-	protected String ratesFilepath = System.getProperty("java.io.tmpdir");
+	//protected String resourceFilepath = System.getProperty("java.io.tmpdir");
+	protected String resourceFilepath = "./src/main/resources";
 	protected String ratesFilename;
 	// default refresh rate of 1 day
 	public int refreshRateSeconds = 86400;
@@ -21,6 +22,15 @@ public class FileStore extends DiskStore {
 
 	public FileStore(String filenameAppender) {
 		this.ratesFilename = System.getProperty("file.separator") + filenameAppender + "XchangeRates.json";
+	}
+
+	/**
+	 * sets the filpath where resource should be cached/stored
+	 *
+	 * @param resourceFilepath
+	 */
+	public void setResourceFilepath(String resourceFilepath) {
+		this.resourceFilepath = resourceFilepath;
 	}
 
 	/**
@@ -33,7 +43,7 @@ public class FileStore extends DiskStore {
 			throw new StorageException("Cannot save null exchangeRates!");
 		}
 		try {
-			FileWriter file = new FileWriter(ratesFilepath + ratesFilename);
+			FileWriter file = new FileWriter(resourceFilepath + ratesFilename);
 			file.write(exchangeRates.toString());
 			file.flush();
 			file.close();
@@ -54,7 +64,7 @@ public class FileStore extends DiskStore {
 		BufferedReader br = null;
 		try {
 			String line;
-			br = new BufferedReader(new FileReader(ratesFilepath + ratesFilename));
+			br = new BufferedReader(new FileReader(resourceFilepath + ratesFilename));
 			while ((line = br.readLine()) != null) {
 				jsonData += line + "\n";
 			}
@@ -91,7 +101,7 @@ public class FileStore extends DiskStore {
 	 * @return boolean truth value
 	 */
 	public boolean resourceExists() {
-		File f = new File(ratesFilepath + ratesFilename);
+		File f = new File(resourceFilepath + ratesFilename);
 		if (f.exists() && !f.isDirectory()) {
 			return true;
 		}

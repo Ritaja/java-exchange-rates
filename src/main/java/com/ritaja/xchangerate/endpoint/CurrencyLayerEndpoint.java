@@ -33,7 +33,7 @@ public class CurrencyLayerEndpoint extends ServiceFactory {
 	 * @throws JSONException
 	 */
 	public boolean checkResponse() throws EndpointException, JSONException {
-		if (exchangeRates.get("success").toString().equalsIgnoreCase("false")) {
+		if (response.get("success").toString().equalsIgnoreCase("false")) {
 			throw new EndpointException("Currency Layer request did not succeed, info: " + exchangeRates.getJSONObject("error").get("info"));
 		}
 		return true;
