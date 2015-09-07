@@ -10,7 +10,7 @@ import com.ritaja.xchangerate.util.Currency;
 /**
  * Created by rsengupta on 03/09/15.
  */
-public class CurrencyLayerEndpoint extends ServiceFactory {
+public class CurrencyLayerEndpoint extends EndpointFactory {
 	public static final String BASE_URL = "http://apilayer.net/api/";
 	public static final String ENDPOINT = "live";
 	private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(CurrencyLayerEndpoint.class.getName());

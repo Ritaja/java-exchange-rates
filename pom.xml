@@ -14,21 +14,19 @@
 	<!-- Dependencies                                                           -->
 	<!-- ====================================================================== -->
 	<dependencies>
+		<!-- ehcache, only used for testing-->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
 			<version>2.9.0</version>
 		</dependency>
+		<!-- TestNG used for testing-->
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>6.9.6</version>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.3</version>
-		</dependency>
+		<!-- used for backward compatibility, for versions less than java 8-->
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
@@ -39,26 +37,40 @@
 			<artifactId>json-simple</artifactId>
 			<version>1.1</version>
 		</dependency>
+		<!-- apache HTTP library, optional, you can design your own, refer: HttpService Interface-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5</version>
 		</dependency>
+		<!-- apache HTTP library, optional, you can design your own, refer: HttpService Interface-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.4.1</version>
 		</dependency>
 		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.3</version>
+		</dependency>
+		<!-- standard JSON format-->
+		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20090211</version>
 		</dependency>
-		<!-- Currency converter library service (used for testing)-->
+		<!-- Currency converter library service (only used for testing)-->
 		<dependency>
 			<groupId>com.tunyk.currencyconverter</groupId>
 			<artifactId>currency-converter-api</artifactId>
 			<version>1.0</version>
+		</dependency>
+		<!-- MongoDb driver, if you wish to store on Mongo-->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver</artifactId>
+			<version>3.0.2</version>
 		</dependency>
 	</dependencies>
 </project>

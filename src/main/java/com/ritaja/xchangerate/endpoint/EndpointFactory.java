@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.ritaja.xchangerate.api.CurrencyNotSupportedException;
-import com.ritaja.xchangerate.api.XchangeRateException;
 import com.ritaja.xchangerate.caching.CachingXchangeRate;
 import com.ritaja.xchangerate.service.HttpMethods;
 import com.ritaja.xchangerate.service.HttpserviceImpl;
@@ -19,31 +18,29 @@ import com.ritaja.xchangerate.util.Currency;
 /**
  * Created by rsengupta on 04/09/15.
  */
-public abstract class ServiceFactory extends CachingXchangeRate {
+public abstract class EndpointFactory extends CachingXchangeRate implements ServiceEndpoint {
 	// the intermediate currency
 	public Currency baseCurrency;
 	// used for executing requests to the (REST) API
 	private HttpserviceImpl httpservice;
 	protected JSONObject response;
 
-	public ServiceFactory(DiskStore diskStore, Currency baseCurrency, String uri) {
+	public EndpointFactory(DiskStore diskStore, Currency baseCurrency, String uri) {
 		super(diskStore);
 		this.baseCurrency = baseCurrency;
 		httpservice = new HttpserviceImpl(uri);
 	}
 
-	public Currency getBaseCurrency() {
-		return this.baseCurrency;
-	}
-
 	/**
 	 * sends the live request to currency layer API and saves the exchange rates from the response
 	 *
-	 * @throws XchangeRateException
+	 * @throws JSONException
+	 * @throws ServiceException
+	 * @throws EndpointException
 	 */
 	public JSONObject sendLiveRequest() throws JSONException, ServiceException, EndpointException {
-		response=httpservice.getResponse(HttpMethods.GET);
-		if(checkResponse()) {
+		response = httpservice.getResponse(HttpMethods.GET);
+		if (checkResponse()) {
 			return response;
 		}
 		return null;
@@ -57,6 +54,7 @@ public abstract class ServiceFactory extends CachingXchangeRate {
 	 * @param fromCurrency currency to convert from
 	 * @return double converted amount
 	 * @throws JSONException
+	 * @throws CurrencyNotSupportedException
 	 */
 	public BigDecimal convertToBaseCurrency(BigDecimal moneyAmount, Currency fromCurrency) throws JSONException, CurrencyNotSupportedException {
 		return (moneyAmount.divide(getRate(fromCurrency), 2, RoundingMode.HALF_UP));
@@ -70,6 +68,7 @@ public abstract class ServiceFactory extends CachingXchangeRate {
 	 * @param toCurrency currency to USD into
 	 * @return double converted amount
 	 * @throws JSONException
+	 * @throws CurrencyNotSupportedException
 	 */
 	public BigDecimal convertFromBaseCurrency(BigDecimal moneyAmount, Currency toCurrency) throws JSONException, CurrencyNotSupportedException {
 		int digitsBeforeDecimal = moneyAmount.toPlainString().split("\\.")[0].length();
@@ -87,5 +86,13 @@ public abstract class ServiceFactory extends CachingXchangeRate {
 	 */
 	public abstract boolean checkResponse() throws EndpointException, JSONException;
 
+	/**
+	 * retrieves rate of exchange price for the desiered currency
+	 *
+	 * @param currency
+	 * @return BigDecimal exchange rate
+	 * @throws JSONException
+	 * @throws CurrencyNotSupportedException
+	 */
 	public abstract BigDecimal getRate(Currency currency) throws JSONException, CurrencyNotSupportedException;
 }

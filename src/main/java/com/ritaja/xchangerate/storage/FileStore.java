@@ -16,9 +16,6 @@ public class FileStore extends DiskStore {
 	//protected String resourceFilepath = System.getProperty("java.io.tmpdir");
 	protected String resourceFilepath = "./src/main/resources";
 	protected String ratesFilename;
-	// default refresh rate of 1 day
-	public int refreshRateSeconds = 86400;
-	protected JSONObject exchangeRates = null;
 
 	public FileStore(String filenameAppender) {
 		this.ratesFilename = System.getProperty("file.separator") + filenameAppender + "XchangeRates.json";
@@ -84,15 +81,6 @@ public class FileStore extends DiskStore {
 		} catch (JSONException e) {
 			throw new StorageException(e);
 		}
-	}
-
-	/**
-	 * set the refresh rate for checking when stored exchange rate is outdated
-	 *
-	 * @param refreshrateSeconds
-	 */
-	public void setRefreshrateSeconds(int refreshrateSeconds) {
-		this.refreshRateSeconds = refreshrateSeconds;
 	}
 
 	/**

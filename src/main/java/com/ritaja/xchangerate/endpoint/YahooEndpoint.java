@@ -10,14 +10,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.ritaja.xchangerate.api.CurrencyNotSupportedException;
-import com.ritaja.xchangerate.api.XchangeRateException;
 import com.ritaja.xchangerate.storage.DiskStore;
 import com.ritaja.xchangerate.util.Currency;
 
 /**
  * Created by rsengupta on 03/09/15.
  */
-public class YahooEndpoint extends ServiceFactory {
+public class YahooEndpoint extends EndpointFactory {
 	public static final String BASE_URL = "http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/";
 	public static final String ENDPOINT = "quote";
 	private Map rate = new HashMap();
@@ -29,7 +28,7 @@ public class YahooEndpoint extends ServiceFactory {
 	/**
 	 * checks if the response from the web service API was a success
 	 *
-	 * @throws XchangeRateException
+	 * @throws EndpointException
 	 * @throws JSONException
 	 */
 	public boolean checkResponse() throws EndpointException, JSONException {
@@ -59,7 +58,8 @@ public class YahooEndpoint extends ServiceFactory {
 	 *
 	 * @param currency
 	 * @return long timestamp in linux format
-	 * @throws XchangeRateException
+	 * @throws JSONException
+	 * @throws CurrencyNotSupportedException
 	 */
 	public long getTimestamp(Currency currency) throws JSONException, CurrencyNotSupportedException {
 		if (currency.toString().equalsIgnoreCase(Currency.USD.toString())) {

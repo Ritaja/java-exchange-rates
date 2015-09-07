@@ -22,13 +22,6 @@ public abstract class DiskStore {
 	public abstract JSONObject loadRates() throws StorageException;
 
 	/**
-	 * set the refresh rate for checking when stored exchange rate is outdated
-	 *
-	 * @param refreshrateSeconds
-	 */
-	public abstract void setRefreshrateSeconds(int refreshrateSeconds);
-
-	/**
 	 * check if this resource resource exists
 	 *
 	 * @return boolean truth value
