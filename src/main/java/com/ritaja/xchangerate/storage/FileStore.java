@@ -13,8 +13,7 @@ import org.json.JSONObject;
  * Created by rsengupta on 03/09/15.
  */
 public class FileStore extends DiskStore {
-	//protected String resourceFilepath = System.getProperty("java.io.tmpdir");
-	protected String resourceFilepath = "./src/main/resources";
+	protected String resourceFilepath = System.getProperty("java.io.tmpdir");
 	protected String ratesFilename;
 
 	public FileStore(String filenameAppender) {

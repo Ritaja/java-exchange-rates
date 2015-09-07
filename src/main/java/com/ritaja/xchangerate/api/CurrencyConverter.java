@@ -89,13 +89,4 @@ public class CurrencyConverter implements Converter {
 			endpointFactory.setExchangeRates(diskStore.loadRates());
 		}
 	}
-
-	public static void main(String args[]) throws EndpointException, JSONException, StorageException, CurrencyNotSupportedException, ServiceException {
-		CurrencyConverter c = new CurrencyConverterBuilder()
-				.strategy(Strategy.YAHOO_FINANCE_MONGOSTORE)
-				.accessKey("")
-				.buildConverter();
-		c.setRefreshRateSeconds(86400);
-		System.out.println(c.convertCurrency(new BigDecimal("100"), Currency.USD, Currency.EUR));
-	}
 }

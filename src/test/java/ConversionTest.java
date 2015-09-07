@@ -24,14 +24,19 @@ public class ConversionTest {
 	@BeforeClass
 	public void setup() {
 		converter = new CurrencyConverterBuilder()
-				.strategy(Strategy.YAHOO_FINANCE_FILESTORE)
+				.strategy(Strategy.CURRENCY_LAYER_FILESTORE)
 				.accessKey("")
 				.buildConverter();
 		converter.setRefreshRateSeconds(86400);
 	}
 
 	@Test
-	public void simpleConversionTest() throws ServiceException, StorageException, CurrencyNotSupportedException, EndpointException, JSONException {
+	public void simpleConverterFunctionalityTest() throws ServiceException, StorageException, CurrencyNotSupportedException, EndpointException, JSONException {
 		Assert.assertNotNull(converter.convertCurrency(new BigDecimal("100"), Currency.USD, Currency.EUR), "Expected a value after conversion");
+	}
+
+	@Test
+	public void simpleConvertersionTest() throws ServiceException, StorageException, CurrencyNotSupportedException, EndpointException, JSONException {
+		Assert.assertTrue(converter.convertCurrency(new BigDecimal("100"), Currency.USD, Currency.GBP).compareTo(new BigDecimal("100.00")) == -1, "Expected a value after conversion");
 	}
 }

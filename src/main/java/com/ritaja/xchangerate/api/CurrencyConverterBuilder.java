@@ -4,7 +4,6 @@ import com.ritaja.xchangerate.endpoint.CurrencyLayerEndpoint;
 import com.ritaja.xchangerate.endpoint.YahooEndpoint;
 import com.ritaja.xchangerate.storage.DiskStore;
 import com.ritaja.xchangerate.storage.FileStore;
-import com.ritaja.xchangerate.storage.MongoStore;
 import com.ritaja.xchangerate.util.Strategy;
 
 /**
@@ -27,9 +26,6 @@ public class CurrencyConverterBuilder {
 		} else if (_strategy.equals(Strategy.CURRENCY_LAYER_FILESTORE) && _accessKey != null) {
 			diskStore = new FileStore("currencyLayer");
 			return new CurrencyConverter(diskStore, new CurrencyLayerEndpoint(diskStore, _accessKey));
-		} else if (_strategy.equals(Strategy.YAHOO_FINANCE_MONGOSTORE)) {
-			diskStore = new MongoStore();
-			return new CurrencyConverter(diskStore, new YahooEndpoint(diskStore));
 		}
 		throw new IllegalArgumentException("Strategy: " + _strategy + " requires accessKey for endpoint service, none provided!");
 	}
