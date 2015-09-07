@@ -46,13 +46,7 @@ converter.setRefreshRateSeconds(86400);
 converter.convertCurrency(new BigDecimal("100"), Currency.USD, Currency.EUR)
 // Thats how easy it is......
 ```
-Yahoo finance endpoint has different timestamps for each currency exchange rate. This library checks for the updated exchange rate for the desiered currencies efore the conversion task. This behaviour is controlled by the **refreshRate** parameter
-
-If you wish to run the tests for currency layer endpoint, please paste your access_key in the access_key.properties file:
-```Java
-accessKey=#YOUR_ACCESS_KEY
-```
-tests for the Yahoo endpoint is enabled and requires no access keys.
+Yahoo finance endpoint has different timestamps for each currency exchange rate. This library checks for the updated exchange rate for the desiered currencies efore the conversion task. This behaviour is controlled by the **refreshRate** parameter.
 
 The list of supported currencies at the moment limited to service provided by currecyLayer API which includes the following **168 currencies**:  
 

@@ -1,3 +1,5 @@
+package ritaja.xchangerate;
+
 import java.math.BigDecimal;
 
 import org.json.JSONException;
