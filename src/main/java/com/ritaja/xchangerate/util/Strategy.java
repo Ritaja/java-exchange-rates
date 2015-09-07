@@ -1,8 +1,5 @@
 package com.ritaja.xchangerate.util;
 
-import com.ritaja.xchangerate.endpoint.YahooEndpoint;
-import com.ritaja.xchangerate.storage.FileStore;
-
 /**
  * Created by rsengupta on 06/09/15.
  */
