@@ -48,6 +48,8 @@ converter.convertCurrency(new BigDecimal("100"), Currency.USD, Currency.EUR)
 ```
 Yahoo finance endpoint has different timestamps for each currency exchange rate. This library checks for the updated exchange rate for the desiered currencies efore the conversion task. This behaviour is controlled by the **refreshRate** parameter.
 
+Distribution is taken care of with the help of [JitPack](https://jitpack.io/#Ritaja/xchange-rate-api)
+
 The list of supported currencies at the moment limited to service provided by currecyLayer API which includes the following **168 currencies**:  
 
 <table>
