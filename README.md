@@ -13,41 +13,40 @@ To allow **offline conversion**, this library stores conversion rates obtained f
 
 Example Use:
 
-**using the currency layer endpoint**
-```Java
-// create the appropriate servive object
-CurrencyLayer currencyLayer = new CurrencyLayer(YOUR_ACCESS_KEY);
-
-// set the refresh rate  to set timer to update new exchange rates
-currencyLayer.setRefreshrateSeconds(86400);
-
-// convert between currencies
-// general format of conversion is convertCurrency(amount, fromCurrency, toCurrency)
-// example conversion of 100 USD to EUR is:
-currencyLayer.convertCurrency(new BigDecimal(100.00), Currency.USD, Currency.EUR)
-// Thats how easy it is......
-```
 **using the yahoo finance endpoint**
 ```Java
 // create the appropriate servive object
-YahooCurrencyEndpoint yahooCurrencyEndpoint = new YahooCurrencyEndpoint();
+private CurrencyConverter converter = new CurrencyConverterBuilder()
+				.strategy(Strategy.YAHOO_FINANCE_FILESTORE)
+				.buildConverter();
 
 // set the refresh rate  to set timer to update new exchange rates
-yahooCurrencyEndpoint.setRefreshrateSeconds(86400);
+converter.setRefreshRateSeconds(86400);
 
 // convert between currencies
 // general format of conversion is convertCurrency(amount, fromCurrency, toCurrency)
 // example conversion of 100 USD to EUR is:
-yahooCurrencyEndpoint.convertCurrency(new BigDecimal(100.00), Currency.USD, Currency.EUR)
+converter.convertCurrency(new BigDecimal("100"), Currency.USD, Currency.EUR)
 // Thats how easy it is......
 ```
-Yahoo finance endpoint has different timestamps for each currency exchange rate. This library checks for the updated exchange rate for the desiered currencies efore the conversion task. This behaviour is controlled by the **refreshRate** parameter
-
-If you wish to run the tests for currency layer endpoint, please paste your access_key in the access_key.properties file:
+**using the currency layer endpoint (needs access key)**
 ```Java
-accessKey=#YOUR_ACCESS_KEY
+// create the appropriate servive object
+private CurrencyConverter converter = new CurrencyConverterBuilder()
+				.strategy(Strategy.CURRENCY_LAYER_FILESTORE)
+				.accessKey(YOUR_ACCESS_KEY)
+				.buildConverter();
+
+// set the refresh rate  to set timer to update new exchange rates
+converter.setRefreshRateSeconds(86400);
+
+// convert between currencies
+// general format of conversion is convertCurrency(amount, fromCurrency, toCurrency)
+// example conversion of 100 USD to EUR is:
+converter.convertCurrency(new BigDecimal("100"), Currency.USD, Currency.EUR)
+// Thats how easy it is......
 ```
-tests for the Yahoo endpoint is enabled and requires no access keys.
+Yahoo finance endpoint has different timestamps for each currency exchange rate. This library checks for the updated exchange rate for the desiered currencies efore the conversion task. This behaviour is controlled by the **refreshRate** parameter.
 
 The list of supported currencies at the moment limited to service provided by currecyLayer API which includes the following **168 currencies**:  
 
