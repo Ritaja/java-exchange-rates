@@ -6,6 +6,7 @@ import org.json.JSONObject;
  * Created by rsengupta on 03/09/15.
  */
 public abstract class DiskStore {
+	public String resourceFilepath = System.getProperty("java.io.tmpdir");
 	/**
 	 * saves the exchange rates in a stored resource file
 	 *

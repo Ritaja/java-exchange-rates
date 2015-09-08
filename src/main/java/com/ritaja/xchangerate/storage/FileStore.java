@@ -13,20 +13,10 @@ import org.json.JSONObject;
  * Created by rsengupta on 03/09/15.
  */
 public class FileStore extends DiskStore {
-	protected String resourceFilepath = System.getProperty("java.io.tmpdir");
 	protected String ratesFilename;
 
 	public FileStore(String filenameAppender) {
 		this.ratesFilename = System.getProperty("file.separator") + filenameAppender + "XchangeRates.json";
-	}
-
-	/**
-	 * sets the filpath where resource should be cached/stored
-	 *
-	 * @param resourceFilepath
-	 */
-	public void setResourceFilepath(String resourceFilepath) {
-		this.resourceFilepath = resourceFilepath;
 	}
 
 	/**

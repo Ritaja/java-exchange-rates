@@ -32,10 +32,19 @@ public class CurrencyConverter implements Converter {
 	 * When this time in seconds exceeds for the currency a
 	 * fresh request is sent and exchange rates are cached.
 	 *
-	 * @param seconds
+	 * @param seconds int
 	 */
 	public void setRefreshRateSeconds(int seconds) {
 		endpointFactory.refreshRateSeconds = seconds;
+	}
+
+	/**
+	 * sets the filepath where resource should be cached/stored
+	 *
+	 * @param resourceFilepath String
+	 */
+	public void setResourceFilepath(String resourceFilepath) {
+		diskStore.resourceFilepath = resourceFilepath;
 	}
 
 	/**
