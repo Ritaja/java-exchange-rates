@@ -26,7 +26,7 @@ public class ConversionTest {
 	@BeforeClass
 	public void setup() {
 		converter = new CurrencyConverterBuilder()
-				.strategy(Strategy.CURRENCY_LAYER_FILESTORE)
+				.strategy(Strategy.YAHOO_FINANCE_FILESTORE)
 				.accessKey("")
 				.buildConverter();
 		converter.setRefreshRateSeconds(86400);
