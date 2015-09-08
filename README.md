@@ -1,4 +1,5 @@
-## Xchange Rate API ##   ![Travis build state](https://travis-ci.org/Ritaja/xchange-rate-api.svg)
+![Travis build state](https://travis-ci.org/Ritaja/xchange-rate-api.svg)
+## Xchange Rate API ##   
 
 Xchange Rate is a Java library which provides API for currency conversion. It uses different web based servivces to obtain live conversion rates, store them and allow offline currency conversions.
 
@@ -47,6 +48,13 @@ converter.convertCurrency(new BigDecimal("100"), Currency.USD, Currency.EUR)
 // Thats how easy it is......
 ```
 Yahoo finance endpoint has different timestamps for each currency exchange rate. This library checks for the updated exchange rate for the desiered currencies efore the conversion task. This behaviour is controlled by the **refreshRate** parameter.
+
+To set the file path where files should be stored on disk, simply use:
+
+```Java
+converter.setResourceFilepath(DESIERED_FILEPATH);
+```
+The default filepath is picked up from ```Java System.getProperty("java.io.tmpdir");```
 
 The list of supported currencies at the moment limited to service provided by currecyLayer API which includes the following **168 currencies**:  
 
