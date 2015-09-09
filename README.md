@@ -1,6 +1,6 @@
 ![Travis build state](https://travis-ci.org/Ritaja/xchange-rate-api.svg)
 
-## Xchange Rate API ##   
+## Java exchange rates API ##   
 
 Xchange Rate is a Java library which provides API for currency conversion. It uses different web based servivces to obtain live conversion rates, store them and allow offline currency conversions.
 
