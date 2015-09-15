@@ -1,6 +1,10 @@
-![Travis build state](https://travis-ci.org/Ritaja/xchange-rate-api.svg)
+![Travis build state](https://travis-ci.org/Ritaja/java-exchange-rates.svg?branch=master)
 
-## Java exchange rates API ##   
+
+![Jitpack](https://img.shields.io/github/release/Ritaja/java-exchange-rates.svg?label=JitPack)
+
+
+## Java exchange rates API  
 
 Xchange Rate is a Java library which provides API for currency conversion. It uses different web based servivces to obtain live conversion rates, store them and allow offline currency conversions.
 
@@ -56,6 +60,43 @@ To set the file path where files should be stored on disk, simply use:
 converter.setResourceFilepath(DESIERED_FILEPATH);
 ```
 The default filepath is picked up from ```Java System.getProperty("java.io.tmpdir");```
+
+This library can be grabbed using Jitpack.io:
+
+**MAVEN**
+
+```xml
+<repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+</repository>
+```
+and then add dependancy
+
+```xml
+<dependency>
+	    <groupId>com.github.Ritaja</groupId>
+	    <artifactId>java-exchange-rates</artifactId>
+	    <version>1.0</version>
+</dependency>
+```
+
+**GRADLE**
+
+```
+ repositories {
+        // ...
+        maven { url "https://jitpack.io" }
+    }
+```
+and then add dependancy
+
+```
+dependencies {
+	        compile 'com.github.Ritaja:java-exchange-rates:1.0'
+	}
+```
+
 
 The list of supported currencies at the moment limited to service provided by currecyLayer API which includes the following **168 currencies**:  
 
