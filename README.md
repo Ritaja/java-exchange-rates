@@ -6,7 +6,7 @@
 
 ## Java exchange rates API  
 
-Xchange Rate is a Java library which provides API for currency conversion. It uses different web based servivces to obtain live conversion rates, store them and allow offline currency conversions.
+A Java library which provides API for currency conversion. It uses different web based servivces to obtain live conversion rates, store them and allow offline currency conversions.
 
 To allow **offline conversion**, this library stores conversion rates obtained from the web-service and uses the **stored exchange** rates for offline conversion. Each time the Library is run it checks if the conversion rates stored are outdated. If it finds outdated exchange rates it **updates the stored exchange rates** (using the web-service defined) and then completes the conversion task. To instuct the code when to consider exchange rates as outdated set the **refreshRate** parameter. An example code below explains this scenario.
 
